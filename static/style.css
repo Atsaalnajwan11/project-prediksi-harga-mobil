@@ -1,0 +1,467 @@
+/* ============================================================
+   CARFORGE — Dark Industrial Theme (IRONFORGE style)
+   ============================================================ */
+
+:root {
+  --bg: #0a0a0a;
+  --bg-darker: #050505;
+  --bg-card: #141414;
+  --bg-card-hover: #1a1a1a;
+  --fg: #f5f5f5;
+  --fg-dim: #c0c0c0;
+  --muted: #6a6a6a;
+  --accent: #FF5400;
+  --accent-bright: #FF7A33;
+  --accent-dim: #B33A00;
+  --accent-glow: rgba(255, 84, 0, 0.45);
+  --silver: #C8C8C8;
+  --silver-dim: #5a5a5a;
+  --border: #1f1f1f;
+  --border-light: #2a2a2a;
+}
+
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: 'Archivo', sans-serif;
+  overflow-x: hidden;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+section[id] { scroll-margin-top: 90px; }
+
+/* ---------- Typography ---------- */
+.font-display { font-family: 'Bebas Neue', sans-serif; letter-spacing: 0.005em; }
+.font-heading { font-family: 'Oswald', sans-serif; }
+.font-mono    { font-family: 'JetBrains Mono', monospace; }
+
+/* ---------- Grain overlay ---------- */
+.grain {
+  position: fixed;
+  inset: -10%;
+  pointer-events: none;
+  z-index: 200;
+  opacity: 0.08;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='250' height='250'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='3' stitchTiles='stitch'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+  mix-blend-mode: overlay;
+}
+
+/* ---------- Background texture ---------- */
+.bg-textured {
+  background-color: var(--bg);
+  background-image:
+    radial-gradient(circle at 20% 30%, rgba(255, 84, 0, 0.06) 0%, transparent 40%),
+    radial-gradient(circle at 80% 70%, rgba(80, 80, 80, 0.06) 0%, transparent 40%);
+}
+
+/* ---------- Reveal on scroll ---------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(48px);
+  transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.9s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal.in-view { opacity: 1; transform: translateY(0); }
+
+.reveal-stagger > * {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+              transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.reveal-stagger.in-view > * { opacity: 1; transform: translateY(0); }
+.reveal-stagger.in-view > *:nth-child(1) { transition-delay: 0s; }
+.reveal-stagger.in-view > *:nth-child(2) { transition-delay: 0.1s; }
+.reveal-stagger.in-view > *:nth-child(3) { transition-delay: 0.2s; }
+.reveal-stagger.in-view > *:nth-child(4) { transition-delay: 0.3s; }
+.reveal-stagger.in-view > *:nth-child(5) { transition-delay: 0.4s; }
+.reveal-stagger.in-view > *:nth-child(6) { transition-delay: 0.5s; }
+
+/* ---------- Hero reel ---------- */
+.reel-frame {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  transition: opacity 2s ease-in-out;
+}
+.reel-frame.active { opacity: 1; }
+.reel-frame img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(100%) contrast(1.55) brightness(0.42);
+  transform: scale(1.06);
+}
+.reel-frame.active img { animation: kenburns 9s ease-out forwards; }
+
+@keyframes kenburns {
+  0%   { transform: scale(1.06) translate(0, 0); }
+  100% { transform: scale(1.2) translate(-3%, -3%); }
+}
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(10,10,10,0.92) 0%, rgba(10,10,10,0.45) 28%, rgba(10,10,10,0.55) 65%, rgba(10,10,10,0.98) 100%),
+    linear-gradient(90deg, rgba(10,10,10,0.85) 0%, rgba(10,10,10,0.2) 50%, rgba(10,10,10,0.5) 100%),
+    radial-gradient(ellipse at 25% 60%, rgba(255, 84, 0, 0.18) 0%, transparent 55%);
+}
+
+.scan-line {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent 0px,
+    transparent 3px,
+    rgba(0, 0, 0, 0.15) 3px,
+    rgba(0, 0, 0, 0.15) 4px
+  );
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ---------- Headline lines reveal ---------- */
+.headline-line { overflow: hidden; display: block; }
+.headline-line span {
+  display: inline-block;
+  transform: translateY(110%);
+  transition: transform 1s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.in-view .headline-line span { transform: translateY(0); }
+.headline-line:nth-child(2) span { transition-delay: 0.1s; }
+.headline-line:nth-child(3) span { transition-delay: 0.2s; }
+
+/* ---------- Text effects ---------- */
+.text-stroke {
+  -webkit-text-stroke: 1.5px var(--silver-dim);
+  color: transparent;
+}
+
+/* ---------- Section marker ---------- */
+.section-marker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  color: var(--accent);
+  text-transform: uppercase;
+}
+.section-marker::before {
+  content: '';
+  width: 32px;
+  height: 1px;
+  background: var(--accent);
+}
+
+/* ---------- Pulse CTA ---------- */
+@keyframes pulse-cta {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 84, 0, 0.65), 0 0 40px rgba(255, 84, 0, 0.3); }
+  50%      { box-shadow: 0 0 0 18px rgba(255, 84, 0, 0), 0 0 40px rgba(255, 84, 0, 0.3); }
+}
+.pulse-btn { animation: pulse-cta 2.4s ease-out infinite; }
+
+/* ---------- Marquee ---------- */
+@keyframes marquee {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.marquee-track {
+  display: flex;
+  animation: marquee 38s linear infinite;
+  width: max-content;
+}
+
+/* ---------- REC dot ---------- */
+@keyframes rec-blink {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.3; }
+}
+.rec-dot { animation: rec-blink 1.5s ease-in-out infinite; }
+
+/* ---------- Progress bar ---------- */
+.progress-bar {
+  height: 1px;
+  background: rgba(255, 255, 255, 0.1);
+  overflow: hidden;
+}
+.progress-bar-fill {
+  height: 100%;
+  background: var(--accent);
+  width: 0%;
+}
+
+/* ---------- Number counter ---------- */
+.number-display { font-variant-numeric: tabular-nums; }
+
+/* ---------- Nav link ---------- */
+.nav-link {
+  position: relative;
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--fg-dim);
+  transition: color 0.3s;
+}
+.nav-link:hover { color: var(--fg); }
+.nav-link::before {
+  content: '';
+  position: absolute;
+  left: -14px;
+  top: 50%;
+  transform: translateY(-50%) scaleY(0);
+  width: 4px;
+  height: 4px;
+  background: var(--accent);
+  transition: transform 0.3s;
+}
+.nav-link:hover::before { transform: translateY(-50%) scaleY(1); }
+
+/* ---------- Info card ---------- */
+.info-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  transition: border-color 0.4s, background 0.4s;
+}
+.info-card:hover {
+  border-color: var(--accent-dim);
+  background: var(--bg-card-hover);
+}
+
+/* ---------- Notch corners ---------- */
+.notch-corner { position: relative; }
+.notch-corner::before,
+.notch-corner::after {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  border: 1px solid var(--accent);
+  pointer-events: none;
+  z-index: 3;
+}
+.notch-corner::before {
+  top: -1px; left: -1px;
+  border-right: none;
+  border-bottom: none;
+}
+.notch-corner::after {
+  bottom: -1px; right: -1px;
+  border-left: none;
+  border-top: none;
+}
+
+/* ---------- Form input (underline style) ---------- */
+.form-input {
+  background: transparent;
+  border: none;
+  border-bottom: 1px solid var(--border-light);
+  color: var(--fg);
+  padding: 0.85rem 0;
+  font-family: 'Oswald', sans-serif;
+  font-size: 1.15rem;
+  width: 100%;
+  transition: border-color 0.3s;
+  letter-spacing: 0.04em;
+}
+.form-input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+.form-input::placeholder {
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  font-size: 0.85rem;
+}
+
+/* ---------- Equation box ---------- */
+.equation-box {
+  background: rgba(255, 84, 0, 0.05);
+  border: 1px dashed var(--accent-dim);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.85rem;
+  color: var(--accent-bright);
+  padding: 1rem;
+  text-align: center;
+  letter-spacing: 0.02em;
+}
+
+/* ---------- R² metric bar ---------- */
+.metric-bar {
+  height: 3px;
+  background: var(--border-light);
+  overflow: hidden;
+}
+.metric-bar-fill {
+  height: 100%;
+  width: 0;
+  background: var(--accent);
+  transition: width 1.4s cubic-bezier(0.22, 1, 0.36, 1) 0.3s;
+}
+.reveal.in-view .metric-bar-fill { width: var(--w, 0%); }
+
+/* ---------- Result card (prediksi muncul) ---------- */
+.result-card {
+  background:
+    linear-gradient(135deg, rgba(255, 84, 0, 0.1) 0%, rgba(255, 84, 0, 0.02) 60%, transparent 100%),
+    var(--bg-card);
+  border: 1px solid var(--accent-dim);
+  box-shadow: 0 0 40px rgba(255, 84, 0, 0.12);
+  animation: result-in 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+@keyframes result-in {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.result-price {
+  font-family: 'JetBrains Mono', monospace;
+  font-weight: 700;
+  font-size: clamp(2.4rem, 6vw, 4rem);
+  color: var(--accent);
+  letter-spacing: -0.02em;
+  text-shadow: 0 0 30px var(--accent-glow);
+  line-height: 1.1;
+}
+
+/* ---------- Spec table (about) ---------- */
+.spec-table { border-collapse: collapse; }
+.spec-table th {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.7rem;
+  letter-spacing: 0.25em;
+  text-transform: uppercase;
+  color: var(--accent);
+  text-align: left;
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid var(--accent-dim);
+}
+.spec-table td {
+  font-family: 'Oswald', sans-serif;
+  font-size: 0.95rem;
+  color: var(--fg-dim);
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid var(--border-light);
+}
+.spec-table tr { transition: background 0.3s; }
+.spec-table tbody tr:hover { background: rgba(255, 84, 0, 0.04); }
+.spec-table td:first-child {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+
+/* ---------- Scrollbar ---------- */
+::-webkit-scrollbar { width: 8px; height: 8px; }
+::-webkit-scrollbar-track { background: var(--bg-darker); }
+::-webkit-scrollbar-thumb { background: var(--accent-dim); }
+::-webkit-scrollbar-thumb:hover { background: var(--accent); }
+
+/* ---------- Responsif ---------- */
+@media (max-width: 768px) {
+  .hero-overlay {
+    background:
+      linear-gradient(180deg, rgba(10,10,10,0.95) 0%, rgba(10,10,10,0.6) 40%, rgba(10,10,10,0.98) 100%);
+  }
+}
+/* ============================================================
+   TAMBAHAN — Halaman /predict (Prediction Engine)
+   ============================================================ */
+
+/* ---------- Execution trace panel ---------- */
+.trace-panel { font-family: 'JetBrains Mono', monospace; }
+
+.trace-step {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.65rem 0;
+  border-bottom: 1px dashed var(--border-light);
+  animation: trace-in 0.5s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  animation-delay: calc(var(--i, 0) * 0.08s);
+}
+.trace-step:last-child { border-bottom: none; }
+
+.trace-label {
+  font-size: 0.62rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--muted);
+  line-height: 1.6;
+}
+
+.trace-value {
+  font-size: 0.78rem;
+  color: var(--accent-bright);
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+@keyframes trace-in {
+  from { opacity: 0; transform: translateX(16px); }
+  to   { opacity: 1; transform: translateX(0); }
+}
+
+/* ---------- Preset chips ---------- */
+.preset-chip {
+  cursor: pointer;
+  border: 1px solid var(--border-light);
+  background: transparent;
+  color: var(--fg-dim);
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.68rem;
+  letter-spacing: 0.12em;
+  padding: 0.5rem 0.85rem;
+  transition: border-color 0.3s, color 0.3s, background 0.3s;
+}
+.preset-chip:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+.preset-chip.chip-active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: #000;
+  font-weight: 700;
+}
+
+/* ---------- Live preview line ---------- */
+.live-preview {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+}
+.live-preview strong {
+  color: var(--accent-bright);
+  font-weight: 600;
+}
+
+/* ---------- Equation breakdown di result card ---------- */
+.result-breakdown {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.72rem;
+  color: var(--fg-dim);
+  letter-spacing: 0.03em;
+}
+.result-breakdown .op { color: var(--muted); }
+
+/* ---------- Code block ---------- */
+.code-block {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  line-height: 2;
+  color: var(--fg-dim);
+  white-space: pre;
+}
