@@ -30,15 +30,15 @@
       <a href="{{ url_for('predict') }}" class="nav-link">Prediksi</a>
       <a href="{{ url_for('about') }}" class="nav-link">Tentang Proyek</a>
     </nav>
-    <a href="{{ url_for('index') }}#prediksi" class="hidden sm:inline-block font-heading text-xs tracking-[0.2em] uppercase text-black bg-[var(--silver)] px-5 py-2.5 hover:bg-white transition-colors">Cek Harga</a>
+    <a href="{{ url_for('predict') }}" class="hidden sm:inline-block font-heading text-xs tracking-[0.2em] uppercase text-black bg-[var(--silver)] px-5 py-2.5 hover:bg-white transition-colors">Cek Harga</a>
   </div>
 </header>
 
-<!-- ============ HERO KECIL ============ -->
+<!-- ============ HERO ============ -->
 <section class="relative h-[52vh] min-h-[420px] w-full overflow-hidden">
   <div class="absolute inset-0">
     <div class="reel-frame active">
-      <img src="https://picsum.photos/seed/carforgeAbout/1920/1080.jpg" alt="Data garage">
+      <img src="https://i.pinimg.com/736x/4f/20/93/4f20930a3d510110e68fe0b1dd68bb10.jpg" alt="Data garage">
     </div>
   </div>
   <div class="hero-overlay"></div>
@@ -81,8 +81,8 @@
         ('fa-database', 'LOAD DATA', 'Dataset used_cars.csv dimuat dengan pandas; kolom milage dan price diekstraksi sebagai variabel X dan y.'),
         ('fa-broom', 'DATA CLEANING', 'Menangani missing values, data duplikat, dan outlier ekstrem pada kedua variabel agar model belajar dari sinyal yang bersih.'),
         ('fa-chart-line', 'EDA', 'Analisis eksploratif: scatter plot milage vs price, uji korelasi, dan distribusi data untuk memvalidasi asumsi linearitas.'),
-        ('fa-microchip', 'TRAINING', 'Split data train–test, melatih Simple Linear Regression dengan scikit-learn, lalu menyimpan model sebagai model_used_cars.pkl.'),
-        ('fa-clipboard-check', 'EVALUASI', 'Mengukur performa pada data uji dengan metrik MAE, RMSE, dan R² sebagai tolok ukur akurasi.'),
+        ('fa-microchip', 'TRAINING', 'Split data train-test, melatih Simple Linear Regression dengan scikit-learn, lalu menyimpan model sebagai model_used_cars.pkl.'),
+        ('fa-clipboard-check', 'EVALUASI', 'Mengukur performa pada data uji dengan metrik MAE, RMSE, dan R-squared sebagai tolok ukur akurasi.'),
         ('fa-cloud-arrow-up', 'DEPLOYMENT', 'Model di-serve melalui Flask + Gunicorn sebagai aplikasi web interaktif yang dapat diakses publik.')
       ] %}
       {% for ikon, judul, deskripsi in langkah %}
@@ -114,47 +114,20 @@
         <table class="spec-table w-full">
           <thead>
             <tr>
-              <th>KOMPONEN</th>
-              <th>NILAI / KETERANGAN</th>
+              <th class="text-left py-3 px-4 font-mono text-[11px] tracking-[0.2em] text-[var(--muted)] uppercase border-b border-[var(--border)]">KOMPONEN</th>
+              <th class="text-left py-3 px-4 font-mono text-[11px] tracking-[0.2em] text-[var(--muted)] uppercase border-b border-[var(--border)]">NILAI / KETERANGAN</th>
             </tr>
           </thead>
-          <tbody>
-            <tr>
-              <td>Algoritma</td>
-              <td>Simple Linear Regression (scikit-learn)</td>
-            </tr>
-            <tr>
-              <td>Variabel Input (X)</td>
-              <td>milage — jarak tempuh (miles)</td>
-            </tr>
-            <tr>
-              <td>Variabel Target (y)</td>
-              <td>price — harga mobil (USD)</td>
-            </tr>
-            <tr>
-              <td>Persamaan Regresi</td>
-              <td><code class="text-[var(--accent)] font-mono">price = 56720.39 + (−0.3098) × milage</code></td>
-            </tr>
-            <tr>
-              <td>Intercept (β₀)</td>
-              <td class="font-mono">56720.39</td>
-            </tr>
-            <tr>
-              <td>Koefisien / Slope (β₁)</td>
-              <td class="font-mono">−0.3098</td>
-            </tr>
-            <tr>
-              <td>MAE — Mean Absolute Error</td>
-              <td class="font-mono">$15,341</td>
-            </tr>
-            <tr>
-              <td>RMSE — Root Mean Squared Error</td>
-              <td class="font-mono">$20,498</td>
-            </tr>
-            <tr>
-              <td>R² — Koefisien Determinasi</td>
-              <td><span class="font-mono text-[var(--accent)] border border-[var(--accent)] px-2 py-1">0.4073</span></td>
-            </tr>
+          <tbody class="font-mono text-sm">
+            <tr class="border-b border-[var(--border-light)]"><td class="py-3 px-4">Algoritma</td><td class="py-3 px-4">Simple Linear Regression (scikit-learn)</td></tr>
+            <tr class="border-b border-[var(--border-light)]"><td class="py-3 px-4">Variabel Input (X)</td><td class="py-3 px-4">milage — jarak tempuh (miles)</td></tr>
+            <tr class="border-b border-[var(--border-light)]"><td class="py-3 px-4">Variabel Target (y)</td><td class="py-3 px-4">price — harga mobil (USD)</td></tr>
+            <tr class="border-b border-[var(--border-light)]"><td class="py-3 px-4">Persamaan Regresi</td><td class="py-3 px-4 text-[var(--accent)]">price = 56720.39 + (-0.3098) × milage</td></tr>
+            <tr class="border-b border-[var(--border-light)]"><td class="py-3 px-4">Intercept</td><td class="py-3 px-4">56720.39</td></tr>
+            <tr class="border-b border-[var(--border-light)]"><td class="py-3 px-4">Koefisien / Slope</td><td class="py-3 px-4">-0.3098</td></tr>
+            <tr class="border-b border-[var(--border-light)]"><td class="py-3 px-4">MAE</td><td class="py-3 px-4">$15,341</td></tr>
+            <tr class="border-b border-[var(--border-light)]"><td class="py-3 px-4">RMSE</td><td class="py-3 px-4">$20,498</td></tr>
+            <tr><td class="py-3 px-4">R²</td><td class="py-3 px-4 text-[var(--accent)]">0.4073</td></tr>
           </tbody>
         </table>
       </div>
@@ -179,7 +152,7 @@
           <h3 class="font-display text-2xl">DEPRESIASI JARAK TEMPUH</h3>
         </div>
         <p class="text-[var(--fg-dim)] text-sm leading-relaxed">
-          Koefisien <strong class="text-[var(--fg)]">−0.3098</strong> berarti setiap penambahan 1 mil
+          Koefisien <strong class="text-[var(--fg)]">-0.3098</strong> berarti setiap penambahan 1 mil
           menurunkan estimasi harga $0.3098. Dalam praktik: tiap <strong class="text-[var(--fg)]">10.000 mil</strong>
           tambahan → harga turun ± <strong class="text-[var(--accent)]">$3.098</strong>.
         </p>
@@ -205,7 +178,6 @@
         <p class="text-[var(--fg-dim)] text-sm leading-relaxed">
           R² <strong class="text-[var(--fg)]">0.4073</strong> → milage hanya menjelaskan ±41% variasi harga.
           Sisanya (~59%) dipengaruhi faktor lain: merek, tahun produksi, kondisi, dan transmisi.
-          RMSE &gt; MAE mengindikasikan adanya error besar pada sebagian kecil sampel.
         </p>
       </article>
 
@@ -217,7 +189,7 @@
         <p class="text-[var(--fg-dim)] text-sm leading-relaxed">
           Gunakan sebagai <strong class="text-[var(--fg)]">estimasi awal (screening)</strong> saat
           negosiasi jual-beli — bukan penentu harga final. Pengembangan lanjutan: tambah fitur
-          (merek, tahun, kondisi) dan coba Multiple Regression / Random Forest untuk menaikkan R².
+          (merek, tahun, kondisi) dan coba Multiple Regression / Random Forest.
         </p>
       </article>
     </div>
@@ -230,7 +202,7 @@
     <h2 class="font-display text-4xl md:text-6xl mb-6">
       MODEL SUDAH SIAP. <span class="text-[var(--accent)]">MOBILMU?</span>
     </h2>
-    <a href="{{ url_for('index') }}#prediksi" class="pulse-btn inline-block font-heading text-sm tracking-[0.25em] uppercase text-black bg-[var(--accent)] px-8 py-4">
+    <a href="{{ url_for('predict') }}" class="pulse-btn inline-block font-heading text-sm tracking-[0.25em] uppercase text-black bg-[var(--accent)] px-8 py-4">
       <i class="fas fa-gauge-high mr-2"></i>Prediksi Sekarang
     </a>
   </div>

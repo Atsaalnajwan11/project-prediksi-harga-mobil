@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tentang Proyek — CARFORGE</title>
+<title>CARFORGE — Price Intelligence</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Oswald:wght@300;400;500;600;700&family=Archivo:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -30,208 +30,126 @@
       <a href="{{ url_for('predict') }}" class="nav-link">Prediksi</a>
       <a href="{{ url_for('about') }}" class="nav-link">Tentang Proyek</a>
     </nav>
-    <a href="{{ url_for('index') }}#prediksi" class="hidden sm:inline-block font-heading text-xs tracking-[0.2em] uppercase text-black bg-[var(--silver)] px-5 py-2.5 hover:bg-white transition-colors">Cek Harga</a>
+    <a href="{{ url_for('predict') }}" class="hidden sm:inline-block font-heading text-xs tracking-[0.2em] uppercase text-black bg-[var(--silver)] px-5 py-2.5 hover:bg-white transition-colors">Cek Harga</a>
   </div>
 </header>
 
-<!-- ============ HERO KECIL ============ -->
-<section class="relative h-[52vh] min-h-[420px] w-full overflow-hidden">
+<!-- ============ HERO ============ -->
+<section class="relative h-screen min-h-[700px] w-full overflow-hidden">
   <div class="absolute inset-0">
     <div class="reel-frame active">
-      <img src="https://i.pinimg.com/736x/4f/20/93/4f20930a3d510110e68fe0b1dd68bb10.jpg" alt="Data garage">
+      <img src="https://i.pinimg.com/736x/c4/56/37/c45637819aaa95880dfeb4bddab6c48b.jpg" alt="Hero" class="w-full h-full object-cover">
     </div>
   </div>
   <div class="hero-overlay"></div>
   <div class="scan-line"></div>
 
-  <div class="relative z-10 h-full max-w-[1600px] mx-auto px-6 lg:px-10 flex flex-col justify-end pb-16">
+  <div class="relative z-10 h-full max-w-[1600px] mx-auto px-6 lg:px-10 flex flex-col justify-end pb-24">
     <div class="reveal in-view">
-      <div class="section-marker mb-5"><span>02 — The Project Dossier</span></div>
-      <h1 class="font-display text-6xl md:text-8xl leading-[0.9]">
-        TENTANG <span class="text-stroke">PROYEK.</span>
+      <div class="section-marker mb-6"><span>01 — Linear Regression</span></div>
+      <h1 class="font-display text-7xl md:text-[10rem] leading-[0.85]">
+        CARFORGE.<br>
+        <span class="text-stroke">PREDICT.</span>
       </h1>
-      <p class="text-[var(--fg-dim)] mt-4 max-w-xl">
-        Prediksi Harga Mobil Bekas berdasarkan Milage · Tugas Akhir Mata Kuliah Pembelajaran Mesin
+      <p class="text-[var(--fg-dim)] mt-6 max-w-2xl text-lg">
+        Estimasi harga mobil bekas berdasarkan jarak tempuh (milage) menggunakan
+        Simple Linear Regression. Tugas Akhir Mata Kuliah Pembelajaran Mesin.
       </p>
+      <div class="mt-10 flex flex-wrap gap-4">
+        <a href="{{ url_for('predict') }}" class="pulse-btn inline-block font-heading text-sm tracking-[0.25em] uppercase text-black bg-[var(--accent)] px-8 py-4">
+          <i class="fas fa-gauge-high mr-2"></i>Mulai Prediksi
+        </a>
+        <a href="{{ url_for('about') }}" class="inline-block font-heading text-sm tracking-[0.25em] uppercase text-[var(--fg)] border border-[var(--border)] px-8 py-4 hover:bg-white/5 transition-colors">
+          Tentang Proyek
+        </a>
+      </div>
+    </div>
+  </div>
+
+  <!-- Stats Bar -->
+  <div class="absolute bottom-0 left-0 right-0 border-t border-white/5 bg-black/40 backdrop-blur-md">
+    <div class="max-w-[1600px] mx-auto px-6 lg:px-10 py-5 grid grid-cols-2 md:grid-cols-4 gap-6">
+      <div>
+        <div class="font-mono text-[10px] text-[var(--muted)] tracking-[0.2em] uppercase mb-1">Dataset</div>
+        <div class="font-display text-2xl">3,886</div>
+      </div>
+      <div>
+        <div class="font-mono text-[10px] text-[var(--muted)] tracking-[0.2em] uppercase mb-1">Algoritma</div>
+        <div class="font-display text-2xl">LIN. REG.</div>
+      </div>
+      <div>
+        <div class="font-mono text-[10px] text-[var(--muted)] tracking-[0.2em] uppercase mb-1">R² Score</div>
+        <div class="font-display text-2xl text-[var(--accent)]">0.4073</div>
+      </div>
+      <div>
+        <div class="font-mono text-[10px] text-[var(--muted)] tracking-[0.2em] uppercase mb-1">Framework</div>
+        <div class="font-display text-2xl">FLASK</div>
+      </div>
     </div>
   </div>
 </section>
 
-<!-- ============ METODOLOGI ============ -->
-<section class="relative py-24" id="metodologi">
+<!-- ============ TENTANG SINGKAT ============ -->
+<section class="relative py-24" id="overview">
   <div class="max-w-[1600px] mx-auto px-6 lg:px-10">
-    <div class="reveal grid lg:grid-cols-12 gap-8 mb-14">
-      <div class="lg:col-span-7">
-        <div class="section-marker mb-6"><span>03 — Pipeline</span></div>
+    <div class="reveal grid lg:grid-cols-12 gap-8">
+      <div class="lg:col-span-5">
+        <div class="section-marker mb-6"><span>02 — Overview</span></div>
         <h2 class="font-display text-5xl md:text-7xl leading-[0.9]">
-          ENAM TAHAP.<br>
-          <span class="text-[var(--accent)]">SATU MODEL.</span>
+          MILAGE.<br>
+          <span class="text-[var(--accent)]">PRICE.</span><br>
+          <span class="text-stroke">SIGNAL.</span>
         </h2>
       </div>
-      <div class="lg:col-span-5 flex items-end">
-        <p class="text-[var(--fg-dim)] text-base leading-relaxed">
-          Seluruh pipeline machine learning — dari data mentah hingga model yang di-serve
-          sebagai web app — mengikuti alur kerja yang terukur dan dapat direproduksi.
+      <div class="lg:col-span-7 flex items-center">
+        <p class="text-[var(--fg-dim)] text-lg leading-relaxed">
+          Industri mobil bekas berkembang pesat, namun menentukan harga jual yang adil
+          tetap menantang. CARFORGE memodelkan hubungan linear antara jarak tempuh (milage)
+          dan harga jual menggunakan Regresi Linear Sederhana — algoritma fundamental
+          yang memberikan interpretabilitas tinggi: setiap penambahan 10.000 miles
+          diprediksi menurunkan harga ~$3,098.
         </p>
-      </div>
-    </div>
-
-    <div class="reveal-stagger grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-      {% set langkah = [
-        ('fa-database', 'LOAD DATA', 'Dataset used_cars.csv dimuat dengan pandas; kolom milage dan price diekstraksi sebagai variabel X dan y.'),
-        ('fa-broom', 'DATA CLEANING', 'Menangani missing values, data duplikat, dan outlier ekstrem pada kedua variabel agar model belajar dari sinyal yang bersih.'),
-        ('fa-chart-line', 'EDA', 'Analisis eksploratif: scatter plot milage vs price, uji korelasi, dan distribusi data untuk memvalidasi asumsi linearitas.'),
-        ('fa-microchip', 'TRAINING', 'Split data train–test, melatih Simple Linear Regression dengan scikit-learn, lalu menyimpan model sebagai model_used_cars.pkl.'),
-        ('fa-clipboard-check', 'EVALUASI', 'Mengukur performa pada data uji dengan metrik MAE, RMSE, dan R² sebagai tolok ukur akurasi.'),
-        ('fa-cloud-arrow-up', 'DEPLOYMENT', 'Model di-serve melalui Flask + Gunicorn sebagai aplikasi web interaktif yang dapat diakses publik.')
-      ] %}
-      {% for ikon, judul, deskripsi in langkah %}
-      <article class="info-card notch-corner p-7">
-        <div class="flex items-start justify-between mb-5">
-          <span class="font-mono text-[11px] text-[var(--accent)] tracking-[0.2em]">/ {{ '%02d' % loop.index }}</span>
-          <i class="fas {{ ikon }} text-[var(--accent)] text-lg"></i>
-        </div>
-        <h3 class="font-display text-3xl mb-3">{{ judul }}</h3>
-        <p class="text-[var(--fg-dim)] text-sm leading-relaxed">{{ deskripsi }}</p>
-      </article>
-      {% endfor %}
-    </div>
-  </div>
-</section>
-
-<!-- ============ HASIL MODEL ============ -->
-<section class="relative py-24 border-t border-[var(--border)] bg-[var(--bg-darker)]" id="hasil">
-  <div class="max-w-[1600px] mx-auto px-6 lg:px-10">
-    <div class="reveal mb-12">
-      <div class="section-marker mb-6"><span>04 — Benchmark</span></div>
-      <h2 class="font-display text-5xl md:text-7xl leading-[0.9]">
-        HASIL <span class="text-stroke">MODEL.</span>
-      </h2>
-    </div>
-
-    <div class="reveal info-card notch-corner p-8 lg:p-10">
-      <div class="overflow-x-auto">
-        <table class="spec-table w-full">
-          <thead>
-            <tr>
-              <th>KOMPONEN</th>
-              <th>NILAI / KETERANGAN</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Algoritma</td>
-              <td>Simple Linear Regression (scikit-learn)</td>
-            </tr>
-            <tr>
-              <td>Variabel Input (X)</td>
-              <td>milage — jarak tempuh (miles)</td>
-            </tr>
-            <tr>
-              <td>Variabel Target (y)</td>
-              <td>price — harga mobil (USD)</td>
-            </tr>
-            <tr>
-              <td>Persamaan Regresi</td>
-              <td><code class="text-[var(--accent)] font-mono">price = 56720.39 + (−0.3098) × milage</code></td>
-            </tr>
-            <tr>
-              <td>Intercept (β₀)</td>
-              <td class="font-mono">56720.39</td>
-            </tr>
-            <tr>
-              <td>Koefisien / Slope (β₁)</td>
-              <td class="font-mono">−0.3098</td>
-            </tr>
-            <tr>
-              <td>MAE — Mean Absolute Error</td>
-              <td class="font-mono">$15,341</td>
-            </tr>
-            <tr>
-              <td>RMSE — Root Mean Squared Error</td>
-              <td class="font-mono">$20,498</td>
-            </tr>
-            <tr>
-              <td>R² — Koefisien Determinasi</td>
-              <td><span class="font-mono text-[var(--accent)] border border-[var(--accent)] px-2 py-1">0.4073</span></td>
-            </tr>
-          </tbody>
-        </table>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ============ INTERPRETASI BISNIS ============ -->
-<section class="relative py-24" id="interpretasi">
+<!-- ============ PERSAMAAN ============ -->
+<section class="relative py-24 border-t border-[var(--border)] bg-[var(--bg-darker)]">
   <div class="max-w-[1600px] mx-auto px-6 lg:px-10">
-    <div class="reveal mb-12">
-      <div class="section-marker mb-6"><span>05 — Business Sense</span></div>
-      <h2 class="font-display text-5xl md:text-7xl leading-[0.9]">
-        ARTI ANGKA BAGI <span class="text-[var(--accent)]">DUNIA NYATA.</span>
-      </h2>
-    </div>
-
-    <div class="reveal-stagger grid md:grid-cols-2 gap-6">
-      <article class="info-card p-8">
-        <div class="flex items-center gap-3 mb-4">
-          <i class="fas fa-arrow-trend-down text-[var(--accent)] text-xl"></i>
-          <h3 class="font-display text-2xl">DEPRESIASI JARAK TEMPUH</h3>
+    <div class="reveal info-card notch-corner p-8 lg:p-12">
+      <div class="section-marker mb-6"><span>Persamaan Model</span></div>
+      <div class="text-center py-8">
+        <code class="font-mono text-2xl md:text-4xl text-[var(--accent-bright)]">
+          price = 56720.39 + (−0.3098) × milage
+        </code>
+      </div>
+      <div class="grid md:grid-cols-3 gap-4 mt-8 pt-8 border-t border-[var(--border-light)]">
+        <div>
+          <div class="font-mono text-[10px] text-[var(--muted)] tracking-[0.2em] uppercase mb-2">MAE</div>
+          <div class="font-display text-3xl">$15,341</div>
         </div>
-        <p class="text-[var(--fg-dim)] text-sm leading-relaxed">
-          Koefisien <strong class="text-[var(--fg)]">−0.3098</strong> berarti setiap penambahan 1 mil
-          menurunkan estimasi harga $0.3098. Dalam praktik: tiap <strong class="text-[var(--fg)]">10.000 mil</strong>
-          tambahan → harga turun ± <strong class="text-[var(--accent)]">$3.098</strong>.
-        </p>
-      </article>
-
-      <article class="info-card p-8">
-        <div class="flex items-center gap-3 mb-4">
-          <i class="fas fa-coins text-[var(--accent)] text-xl"></i>
-          <h3 class="font-display text-2xl">HARGA BASELINE</h3>
+        <div>
+          <div class="font-mono text-[10px] text-[var(--muted)] tracking-[0.2em] uppercase mb-2">RMSE</div>
+          <div class="font-display text-3xl">$20,498</div>
         </div>
-        <p class="text-[var(--fg-dim)] text-sm leading-relaxed">
-          Intercept <strong class="text-[var(--fg)]">$56,720.39</strong> adalah estimasi harga mobil
-          dengan milage mendekati 0 (kondisi "seperti baru") — dapat dijadikan acuan harga maksimum
-          berdasarkan data pelatihan.
-        </p>
-      </article>
-
-      <article class="info-card p-8">
-        <div class="flex items-center gap-3 mb-4">
-          <i class="fas fa-triangle-exclamation text-[var(--accent)] text-xl"></i>
-          <h3 class="font-display text-2xl">KETERBATASAN MODEL</h3>
+        <div>
+          <div class="font-mono text-[10px] text-[var(--muted)] tracking-[0.2em] uppercase mb-2">R²</div>
+          <div class="font-display text-3xl text-[var(--accent)]">0.4073</div>
         </div>
-        <p class="text-[var(--fg-dim)] text-sm leading-relaxed">
-          R² <strong class="text-[var(--fg)]">0.4073</strong> → milage hanya menjelaskan ±41% variasi harga.
-          Sisanya (~59%) dipengaruhi faktor lain: merek, tahun produksi, kondisi, dan transmisi.
-          RMSE &gt; MAE mengindikasikan adanya error besar pada sebagian kecil sampel.
-        </p>
-      </article>
-
-      <article class="info-card p-8">
-        <div class="flex items-center gap-3 mb-4">
-          <i class="fas fa-bullseye text-[var(--accent)] text-xl"></i>
-          <h3 class="font-display text-2xl">REKOMENDASI PENGGUNAAN</h3>
-        </div>
-        <p class="text-[var(--fg-dim)] text-sm leading-relaxed">
-          Gunakan sebagai <strong class="text-[var(--fg)]">estimasi awal (screening)</strong> saat
-          negosiasi jual-beli — bukan penentu harga final. Pengembangan lanjutan: tambah fitur
-          (merek, tahun, kondisi) dan coba Multiple Regression / Random Forest untuk menaikkan R².
-        </p>
-      </article>
+      </div>
     </div>
   </div>
 </section>
 
 <!-- ============ CTA ============ -->
-<section class="border-t border-[var(--border)] bg-[var(--bg-darker)] py-20">
+<section class="border-t border-[var(--border)] py-20">
   <div class="max-w-[1600px] mx-auto px-6 lg:px-10 reveal text-center">
     <h2 class="font-display text-4xl md:text-6xl mb-6">
-      MODEL SUDAH SIAP. <span class="text-[var(--accent)]">MOBILMU?</span>
+      SIAP UJI MODEL? <span class="text-[var(--accent)]">MASUKKAN MILAGE.</span>
     </h2>
-    <a href="{{ url_for('index') }}#prediksi" class="pulse-btn inline-block font-heading text-sm tracking-[0.25em] uppercase text-black bg-[var(--accent)] px-8 py-4">
-      <i class="fas fa-gauge-high mr-2"></i>Prediksi Sekarang
+    <a href="{{ url_for('predict') }}" class="pulse-btn inline-block font-heading text-sm tracking-[0.25em] uppercase text-black bg-[var(--accent)] px-8 py-4">
+      <i class="fas fa-play mr-2"></i>Prediksi Sekarang
     </a>
   </div>
 </section>

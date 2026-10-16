@@ -30,13 +30,7 @@
       <a href="{{ url_for('predict') }}" class="nav-link">Prediksi</a>
       <a href="{{ url_for('about') }}" class="nav-link">Tentang Proyek</a>
     </nav>
-    <div class="flex items-center gap-5">
-      <div class="hidden md:flex items-center gap-2 font-mono text-[11px] text-[var(--muted)]">
-        <i class="fas fa-terminal text-[var(--accent)]"></i>
-        <span>MODEL · LIVE</span>
-      </div>
-      <a href="{{ url_for('index') }}" class="hidden sm:inline-block font-heading text-xs tracking-[0.2em] uppercase text-black bg-[var(--silver)] px-5 py-2.5 hover:bg-white transition-colors">Back Home</a>
-    </div>
+    <a href="{{ url_for('index') }}" class="hidden sm:inline-block font-heading text-xs tracking-[0.2em] uppercase text-black bg-[var(--silver)] px-5 py-2.5 hover:bg-white transition-colors">Back Home</a>
   </div>
 </header>
 
@@ -52,13 +46,12 @@
 
   <div class="relative z-10 h-full max-w-[1600px] mx-auto px-6 lg:px-10 flex flex-col justify-end pb-14">
     <div class="reveal in-view">
-      <div class="section-marker mb-5"><span>03 — Prediction Engine · Sesuai Laporan §3.2 &amp; §5.2</span></div>
+      <div class="section-marker mb-5"><span>03 — Prediction Engine</span></div>
       <h1 class="font-display text-6xl md:text-8xl leading-[0.9]">
         PREDICTION <span class="text-stroke">ENGINE.</span>
       </h1>
       <p class="text-[var(--fg-dim)] mt-4 max-w-2xl">
-        Setiap prediksi melewati pipeline yang sama seperti di laporan: cleaning input →
-        validasi → <span class="font-mono text-[var(--accent-bright)]">model.predict()</span> → output USD.
+        Masukkan milage mobil untuk estimasi harga pasar.
       </p>
     </div>
   </div>
@@ -82,7 +75,7 @@
               <i class="fas fa-gauge-high absolute left-0 top-1/2 -translate-y-1/2 text-[var(--accent)]"></i>
               <input type="text" inputmode="numeric" id="milage" name="milage"
                      class="form-input pl-9 pr-16" placeholder="50000 atau 51,000 mi."
-                     value="{{ raw_value }}" required>
+                     value="{{ raw_value or '' }}" required>
               <span class="absolute right-0 top-1/2 -translate-y-1/2 font-mono text-[11px] text-[var(--muted)] tracking-[0.2em]">MI</span>
             </div>
 
@@ -96,7 +89,7 @@
               <button type="button" class="preset-chip" data-value="200000">200K</button>
             </div>
 
-            <!-- Live preview (persamaan, client-side) -->
+            <!-- Live preview -->
             <div class="live-preview mt-5">
               LIVE PREVIEW · 56720.39 + (−0.3098) × x ≈ <strong id="livePreview">—</strong>
             </div>
@@ -133,11 +126,11 @@
                 <span class="text-[var(--accent-bright)] font-bold">{{ prediction }}</span>
               </div>
               <div class="result-breakdown flex justify-between gap-4">
-                <span class="op">PERSAMAAN MANUAL (§4.1)</span>
+                <span class="op">PERSAMAAN MANUAL</span>
                 <span>{{ "${:,.2f}".format(56720.39 + (-0.3098) * milage) }}</span>
               </div>
               <p class="text-[10px] text-[var(--muted)] leading-relaxed pt-2">
-                * Persamaan manual memakai koefisien yang dibulatkan 4 desimal (Laporan §4.1),
+                * Persamaan manual memakai koefisien yang dibulatkan 4 desimal,
                 sehingga bisa selisih beberapa cents dari output model.
               </p>
             </div>
@@ -162,92 +155,30 @@
             {% endfor %}
           </div>
           <p class="text-[10px] text-[var(--muted)] mt-4 leading-relaxed">
-            Trace mengikuti alur prediksi Laporan §3.2 &amp; §5.2 — dari input mentah hingga output USD.
+            Trace mengikuti alur prediksi: cleaning → validasi → predict → formatting.
           </p>
           {% else %}
           <p class="text-sm text-[var(--muted)] leading-relaxed">
             Submit form — setiap langkah pipeline (cleaning → validasi →
-            <span class="font-mono">model.predict()</span> → formatting) akan tercatat di sini,
-            persis seperti alur di laporan.
+            <span class="font-mono">model.predict()</span> → formatting) akan tercatat di sini.
           </p>
           {% endif %}
         </div>
 
-        <!-- KARTU VERIFIKASI LAPORAN -->
+        <!-- KARTU VERIFIKASI -->
         <div class="reveal info-card notch-corner p-8">
-          <div class="section-marker mb-4"><span>Verifikasi — Laporan §3.7</span></div>
+          <div class="section-marker mb-4"><span>Verifikasi</span></div>
           <div class="font-mono text-xs text-[var(--fg-dim)] leading-loose">
             <div><span class="text-[var(--muted)]">&gt;&gt;&gt;</span> loaded.predict([[50000]])</div>
             <div class="text-[var(--accent-bright)]">[41229.32]</div>
           </div>
           <p class="text-xs text-[var(--muted)] mt-4 leading-relaxed">
-            50.000 miles → <span class="text-[var(--fg)] font-semibold">$41,229.32</span> — nilai acuan dari laporan.
-            Coba chip <span class="font-mono text-[var(--accent-bright)]">50K ★</span> di atas;
-            model di server akan menghasilkan nilai yang sama.
+            50.000 miles → <span class="text-[var(--fg)] font-semibold">$41,229.32</span> — nilai acuan.
+            Coba chip <span class="font-mono text-[var(--accent-bright)]">50K ★</span> di atas.
           </p>
         </div>
       </aside>
 
-    </div>
-  </div>
-</section>
-
-<!-- ============ FLOW: CARA KERJA ============ -->
-<section class="relative py-20 lg:py-28 border-t border-[var(--border)] bg-[var(--bg-darker)]" id="flow">
-  <div class="max-w-[1600px] mx-auto px-6 lg:px-10">
-    <div class="reveal grid lg:grid-cols-12 gap-8 mb-14">
-      <div class="lg:col-span-7">
-        <div class="section-marker mb-6"><span>04 — How It Works</span></div>
-        <h2 class="font-display text-5xl md:text-7xl leading-[0.9]">
-          LIMA LANGKAH.<br><span class="text-[var(--accent)]">DARI INPUT KE HARGA.</span>
-        </h2>
-      </div>
-      <div class="lg:col-span-5 flex items-end">
-        <p class="text-[var(--fg-dim)] text-base leading-relaxed">
-          Mekanisme prediksi di halaman ini adalah implementasi langsung dari metodologi laporan —
-          alur yang sama saat model dilatih dan dievaluasi.
-        </p>
-      </div>
-    </div>
-
-    <div class="reveal-stagger grid sm:grid-cols-2 lg:grid-cols-5 gap-5">
-      {% set steps = [
-        ('fa-keyboard', 'RAW INPUT', 'Milage diambil dari form HTML via request.form["milage"].', '§5.2'),
-        ('fa-broom', 'CLEANING', 'Format string dibersihkan: "51,000 mi." → 51000 — sama seperti kolom milage di dataset.', '§3.2'),
-        ('fa-filter', 'VALIDASI', 'Wajib numerik, 0–300.000 miles (filter outlier data training).', '§3.2'),
-        ('fa-microchip', 'PREDIKSI', 'model.predict([[milage]])[0] — model Simple Linear Regression dari file .pkl.', '§5.2 · §3.7'),
-        ('fa-tag', 'OUTPUT', 'Prediksi diformat ke $XX,XXX.XX dan ditampilkan ke pengguna.', '§5.3')
-      ] %}
-      {% for ikon, judul, desc, ref in steps %}
-      <article class="info-card notch-corner p-6">
-        <div class="flex items-start justify-between mb-4">
-          <span class="font-mono text-[11px] text-[var(--accent)] tracking-[0.2em]">/ {{ '%02d' % loop.index }}</span>
-          <i class="fas {{ ikon }} text-[var(--accent)]"></i>
-        </div>
-        <h3 class="font-display text-2xl mb-2">{{ judul }}</h3>
-        <p class="text-[var(--fg-dim)] text-xs leading-relaxed mb-4">{{ desc }}</p>
-        <div class="font-mono text-[10px] text-[var(--muted)] tracking-[0.15em] pt-3 border-t border-[var(--border-light)]">LAPORAN {{ ref }}</div>
-      </article>
-      {% endfor %}
-    </div>
-
-    <!-- Core logic sesuai laporan -->
-    <div class="reveal info-card p-8 mt-8 overflow-x-auto">
-      <div class="section-marker mb-5"><span>Core Logic — Laporan §5.2 + §3.2</span></div>
-      <pre class="code-block"># 1. Input mentah dari form                          (Laporan §5.2)
-raw = request.form["milage"]                          # "51,000 mi."
-
-# 2. Cleaning milage                                 (Laporan §3.2)
-milage = float(raw.replace(" mi.", "").replace(",", ""))   # 51000.0
-
-# 3. Validasi — filter outlier                       (Laporan §3.2)
-if not (0 &lt;= milage &lt;= 300_000):  -&gt;  ditolak dengan pesan error
-
-# 4. Prediksi dengan model .pkl                      (Laporan §5.2 / §3.7)
-prediction = model.predict([[milage]])[0]             # 41229.32
-
-# 5. Format output USD                               (Laporan §5.3)
-return f"${prediction:,.2f}"                          # $41,229.32</pre>
     </div>
   </div>
 </section>
@@ -286,7 +217,7 @@ return f"${prediction:,.2f}"                          # $41,229.32</pre>
     });
   });
 
-  // ---------- Live preview persamaan (client-side, bukan hasil resmi) ----------
+  // ---------- Live preview persamaan ----------
   function updatePreview() {
     const v = parseFloat(input.value.replace(/[^0-9.]/g, ''));
     if (!isNaN(v) && v >= 0 && v <= 300000) {
