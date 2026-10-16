@@ -1,20 +1,34 @@
 """
 =============================================================
 CARFORGE - Aplikasi Web Prediksi Harga Mobil Bekas
+Vercel-Ready Version
 =============================================================
 """
 import os
 import sys
 import logging
 import traceback
-from flask import Flask, render_template, request
+from functools import lru_cache
+from flask import Flask, render_template, request, jsonify
 
 # Setup logging
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-# Setup path (penting untuk Vercel)
+# Setup path
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+# Vercel fallback path
+if not os.path.exists(os.path.join(BASE_DIR, 'model_used_cars.pkl')):
+    alt_paths = [
+        os.environ.get('LAMBDA_TASK_ROOT', ''),
+        '/var/task',
+        os.getcwd()
+    ]
+    for path in alt_paths:
+        if path and os.path.exists(os.path.join(path, 'model_used_cars.pkl')):
+            BASE_DIR = path
+            break
 
 app = Flask(
     __name__,
@@ -23,19 +37,25 @@ app = Flask(
 )
 
 # =========================================================
-# LOAD MODEL DENGAN ERROR HANDLING
+# LAZY LOAD MODEL (dengan cache)
 # =========================================================
 MODEL_PATH = os.path.join(BASE_DIR, 'model_used_cars.pkl')
-logger.info(f"Loading model from: {MODEL_PATH}")
+logger.info(f"Model path: {MODEL_PATH}")
+logger.info(f"File exists: {os.path.exists(MODEL_PATH)}")
 
-model = None
-try:
-    import joblib
-    model = joblib.load(MODEL_PATH)
-    logger.info("✅ Model loaded successfully!")
-except Exception as e:
-    logger.error(f"❌ Failed to load model: {e}")
-    model = None
+@lru_cache(maxsize=1)
+def get_model():
+    """Lazy load model, cache di memory"""
+    try:
+        import joblib
+        logger.info("Loading model...")
+        m = joblib.load(MODEL_PATH)
+        logger.info("✅ Model loaded!")
+        return m
+    except Exception as e:
+        logger.error(f"❌ Model load failed: {e}")
+        logger.error(traceback.format_exc())
+        return None
 
 
 # =========================================================
@@ -43,7 +63,11 @@ except Exception as e:
 # =========================================================
 @app.route('/')
 def index():
-    return render_template('index.html')
+    try:
+        return render_template('index.html')
+    except Exception as e:
+        logger.error(f"Index error: {e}")
+        return str(e), 500
 
 
 # =========================================================
@@ -51,7 +75,7 @@ def index():
 # =========================================================
 @app.route('/prediksi', methods=['GET', 'POST'])
 def predict():
-    """Halaman prediksi - sesuai Laporan §5.2"""
+    """Halaman prediksi"""
     prediction = None
     raw_value = None
     milage = None
@@ -60,46 +84,43 @@ def predict():
 
     if request.method == 'POST':
         try:
-            # 1. Raw input
             raw_value = request.form.get('milage', '').strip()
             trace.append(('1. RAW INPUT', raw_value or '(empty)'))
 
             if not raw_value:
                 error = "Input tidak boleh kosong."
             else:
-                # 2. Cleaning
                 cleaned = raw_value.replace(' mi.', '').replace(',', '').strip()
                 trace.append(('2. CLEANING', f'"{raw_value}" -> "{cleaned}"'))
 
                 try:
                     milage = float(cleaned)
-                    trace.append(('3. PARSE FLOAT', f'{milage}'))
+                    trace.append(('3. PARSE FLOAT', str(milage)))
                 except ValueError:
-                    error = f'"{raw_value}" bukan angka yang valid.'
+                    error = f'"{raw_value}" bukan angka valid.'
 
-                # 3. Validasi
                 if not error and milage is not None:
                     if milage < 0:
                         error = "Milage tidak boleh negatif."
                         trace.append(('4. VALIDASI', 'FAIL: negative'))
                     elif milage > 300000:
-                        error = f"Milage {milage:,.0f} melebihi batas 300.000 miles (outlier)."
+                        error = f"Milage {milage:,.0f} melebihi batas 300.000 miles."
                         trace.append(('4. VALIDASI', 'FAIL: outlier'))
                     else:
-                        trace.append(('4. VALIDASI', f'PASS: 0 <= {milage} <= 300000'))
+                        trace.append(('4. VALIDASI', 'PASS'))
 
-                # 4. Prediksi
-                if not error and milage is not None and model is not None:
-                    import pandas as pd
-                    input_df = pd.DataFrame({'milage': [milage]})
-                    raw_pred = model.predict(input_df)[0]
-                    prediction = "${:,.2f}".format(round(float(raw_pred), 2))
-                    trace.append(('5. MODEL.PREDICT', f'-> {raw_pred:.4f}'))
-                    trace.append(('6. OUTPUT FORMAT', prediction))
-
-                elif model is None and not error:
-                    error = "Model belum siap di server."
-                    trace.append(('5. MODEL.PREDICT', 'FAIL: model not loaded'))
+                if not error and milage is not None:
+                    model = get_model()
+                    if model is not None:
+                        import pandas as pd
+                        input_df = pd.DataFrame({'milage': [milage]})
+                        raw_pred = model.predict(input_df)[0]
+                        prediction = "${:,.2f}".format(round(float(raw_pred), 2))
+                        trace.append(('5. PREDICT', f'-> {raw_pred:.4f}'))
+                        trace.append(('6. OUTPUT', prediction))
+                    else:
+                        error = "Model belum siap di server."
+                        trace.append(('5. PREDICT', 'FAIL: no model'))
 
         except Exception as e:
             logger.error(f"Predict error: {e}")
@@ -121,24 +142,29 @@ def predict():
 # =========================================================
 @app.route('/about')
 def about():
-    return render_template('about.html')
+    try:
+        return render_template('about.html')
+    except Exception as e:
+        logger.error(f"About error: {e}")
+        return str(e), 500
 
 
 # =========================================================
-# ROUTE: HEALTH CHECK
+# ROUTE: HEALTH CHECK (debugging)
 # =========================================================
 @app.route('/health')
 def health():
-    return {
+    return jsonify({
         'status': 'ok',
-        'model_loaded': model is not None,
+        'base_dir': BASE_DIR,
         'model_path': MODEL_PATH,
-        'file_exists': os.path.exists(MODEL_PATH)
-    }
+        'file_exists': os.path.exists(MODEL_PATH),
+        'model_loaded': get_model() is not None
+    })
 
 
 # =========================================================
-# MAIN (untuk lokal)
+# MAIN
 # =========================================================
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
